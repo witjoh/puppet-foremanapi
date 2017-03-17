@@ -1,0 +1,14 @@
+{
+  "name": "foremanapi",
+  "version": "0.0.1",
+  "author": "Johan De Wit",
+  "summary": "resource provider for Foreman API objects",
+  "license": "Apache-2.0",
+  "source": "https://github.com/witjoh/puppet-foremanapi.git",
+  "project_page": "https://github.com/witjohr/puppet-foremanapi",
+  "issues_url": "https://github.com/witjoh/puppet-foremanapi/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
