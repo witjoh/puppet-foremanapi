@@ -6,20 +6,30 @@ require 'pry_debug'
 module ForemanApi
   # wrapper class to handle all rest calls to Foreman api
   class Rest
-
     API_VERSION = '2'
 
     @@config_file
     @@config = {}
     @@api_handler = nil
-
     # initialize the connection when loading the class
 
-
-    def self.get_server_id
+    def self.server_id
       @@config[:server_id]
     end
 
+    def self.sub_type(type, action)
+      # lookup the parameter for the action where values are
+      # assigned to in the api call
+      #
+      # We assume this will always be the last one
+      result = @@api_handler.resource(type.to_sym).action(action.to_sym).params.last.to_s.scan(/\*\w*/).join.tr('*','')
+      if result == "" then
+        return nil
+      else
+        return result
+      end
+    end
+      
     def self.read_config(server_id='localhost')
 
       # read the configuration file to obtain the needed info 
@@ -37,7 +47,6 @@ module ForemanApi
       #   password: 'vPuf2FMJhPSkijVL'
       #   port: 80
       #   protocol: 'https'
-
       if @@config == {} or @@config[:server_id] != server_id then
         if Facter.value('id') == 'root' then
           @@config_file = '/root/.tfm.yaml'
@@ -55,17 +64,17 @@ module ForemanApi
 
         if the_conf.has_key?(server_id) then
 
-          uri_prot = 'http'
+          uri_protocol = 'http'
           uri_port = ''
 
           @@config = Hash[the_conf[server_id].map { |k, v| [k.to_sym, v] }]
-          if the_conf.has_key?(:protocol) then
-            uri_prot = the_conf[:protocol]
+          if @@config.has_key?(:protocol) then
+            uri_protocol = @@config[:protocol]
           end
-          if the_conf.has_key?(:port) then
-            uri_prot = ":#{the_conf[:port]}"
+          if @@config.has_key?(:port) then
+            uri_port = ":#{@@config[:port]}"
           end
-          @@config[:uri] = "#{uri_prot}://#{server_id}#{uri_port}/"
+          @@config[:uri] = "#{uri_protocol}://#{server_id}#{uri_port}/"
           @@config[:server_id] = server_id
         else
           raise(Exception, "No configuration for #{server_id} in #{@@config_file} available")
@@ -109,12 +118,24 @@ module ForemanApi
     end
       
     def self.create(type, object_data)
+      Puppet.debug("Foremanpi::Rest.create adding a new resource from type #{type}")
+    
     end
 
     def self.update(type, object_data)
+      sub_type = sub_type(type, 'update')
+      Puppet.debug("Foremanpi::Rest.update a resource from type #{type}")
+      object_data.each do |record|
+        begin 
+          @@api_handler.resource(type.to_sym).call(:update, :id => record[:name], sub_type.to_sym => {:value => record[:value]} )
+        rescue => e
+          raise(Exception, "\n Could not update #{type} #{record[:name]} : #{e.inspect}")
+        end
+      end
     end
 
     def self.destroy(type, object_data)
+      Puppet.debug("Foremanpi::Rest.destroy a resource from type #{type}")
     end
 
   end
