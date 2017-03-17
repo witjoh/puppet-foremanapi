@@ -21,6 +21,6 @@ foremanapi_settings_general { 'foreman.vagrant.vdab.be':
   max_trend             => '30',
   proxy_request_timeout => '60',
   use_gravatar          => false,
-  login_text            => undef,
+  login_text            => '',
 }
 

@@ -1,7 +1,5 @@
 require_relative '../../../puppet_x/foremanapi/rest'
 
-require 'pry_debug'
-
 def filter(object_data)
   # filters out the settings category from the object_data
   # and returns the result

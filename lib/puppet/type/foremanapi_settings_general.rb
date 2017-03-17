@@ -1,6 +1,5 @@
 require 'uri'
 require 'puppet/parameter/boolean'
-require 'pry_debug'
 
 Puppet::Type.newtype(:foremanapi_settings_general) do
   @doc = 'Manage a foreman server general settings.'
@@ -87,7 +86,7 @@ Puppet::Type.newtype(:foremanapi_settings_general) do
   end
 
   newproperty(:login_text) do
-    desc 'Text to be shown in the login-page footer'
+    desc 'Text to be shown in the login-page footer. Set to empty string to clear this setting'
   end
 
   newproperty(:max_trend) do
