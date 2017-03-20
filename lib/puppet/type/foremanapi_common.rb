@@ -1,4 +1,4 @@
-module Common
+module ForemanApi_Common
 
   # borrowed from /lib/puppet/type/macauthorization.rb
   def munge_boolean(value)

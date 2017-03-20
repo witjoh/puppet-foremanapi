@@ -1,25 +1,13 @@
 require 'uri'
 require 'puppet/parameter/boolean'
-require_relative './common'
+require_relative './foremanapi_common'
 
 Puppet::Type.newtype(:foremanapi_settings_general) do
   @doc = 'Manage a foreman server general settings.'
 
   # bring the finction into the local scope of the class
   #
-  include Common
-  # borrowed from /lib/puppet/type/macauthorization.rb
-  #
-  #def munge_boolean(value)
-  #  case value
-  #  when true, "true", :true
-  #    :true
-  #  when false, "false", :false
-  #    :false
-  #  else
-  #    fail("munge_boolean only takes booleans")
-  #  end
-  #end
+  include ForemanApi_Common
 
   newparam(:tfm_server, namevar: true) do
     desc 'The hostname of the foreman server to manage.'

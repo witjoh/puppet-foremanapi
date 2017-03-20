@@ -52,7 +52,6 @@ def generate_type_template(entry, file=nil)
   if entry['settings_type'] == "boolean"
     prop_attr=", :boolean => true"
   end
-
   file.puts "  newproperty(:#{entry['name']}#{prop_attr}) do"
   file.puts "    desc '#{entry['description']}'"
   case entry['settings_type']
@@ -78,6 +77,10 @@ end
 def print_header(type, file=nil)
   file = STDOUT unless file
 
+  file.puts "require 'uri'"
+  file.puts "require 'puppet/parameter/boolean'"
+  file.puts "require_relative './common'"
+  file.puts
   file.puts "Puppet::Type.newtype(:foremanapi_settings_#{type}) do"
   file.puts "  @doc = 'Manage a foreman server #{type} settings.'"
   file.puts
