@@ -15,10 +15,10 @@ Puppet::Type.newtype(:foremanapi_settings_email) do
   end
 
   newproperty(:delivery_method) do
-    desc 'Method used to deliver email'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] Method used to deliver email'
+    validate do |val|
+      fail 'delivery_method is read-only'
+    end
   end
 
   newproperty(:email_reply_address) do
@@ -37,17 +37,17 @@ Puppet::Type.newtype(:foremanapi_settings_email) do
   end
 
   newproperty(:sendmail_arguments) do
-    desc 'Specify additional options to sendmail'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] Specify additional options to sendmail'
+    validate do |val|
+      fail 'sendmail_arguments is read-only'
+    end
   end
 
   newproperty(:sendmail_location) do
-    desc 'The location of the sendmail executable'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] The location of the sendmail executable'
+    validate do |val|
+      fail 'sendmail_location is read-only'
+    end
   end
 
   newproperty(:send_welcome_email, :boolean => true) do
@@ -67,54 +67,52 @@ Puppet::Type.newtype(:foremanapi_settings_email) do
   end
 
   newproperty(:smtp_authentication) do
-    desc 'Specify authentication type, if required'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] Specify authentication type, if required'
+    validate do |val|
+      fail 'smtp_authentication is read-only'
+    end
   end
 
   newproperty(:smtp_domain) do
-    desc 'HELO/EHLO domain'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] HELO/EHLO domain'
+    validate do |val|
+      fail 'smtp_domain is read-only'
+    end
   end
 
   newproperty(:smtp_enable_starttls_auto, :boolean => true) do
-    desc 'SMTP automatic STARTTLS'
-    newvalue(:true)
-    newvalue(:false)
-    munge do |value|
-      @resource.munge_boolean(value)
+    desc '[READ ONLY] SMTP automatic STARTTLS'
+    validate do |val|
+      fail 'smtp_enable_starttls_auto is read-only'
     end
   end
 
   newproperty(:smtp_openssl_verify_mode) do
-    desc 'When using TLS, you can set how OpenSSL checks the certificate'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] When using TLS, you can set how OpenSSL checks the certificate'
+    validate do |val|
+      fail 'smtp_openssl_verify_mode is read-only'
+    end
   end
 
   newproperty(:smtp_password) do
-    desc 'Password to use to authenticate, if required'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] Password to use to authenticate, if required'
+    validate do |val|
+      fail 'smtp_password is read-only'
+    end
   end
 
   newproperty(:smtp_port) do
-    desc 'Port to connect to'
-    munge do |value|
-      Integer(value)
+    desc '[READ ONLY] Port to connect to'
+    validate do |val|
+      fail 'smtp_port is read-only'
     end
   end
 
   newproperty(:smtp_user_name) do
-    desc 'Username to use to authenticate, if required'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] Username to use to authenticate, if required'
+    validate do |val|
+      fail 'smtp_user_name is read-only'
+    end
   end
 
 end

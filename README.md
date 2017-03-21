@@ -1,8 +1,8 @@
 # foremanapi
 
-Puppet custom Type for the foreman using the ruby API 
+Puppet custom Type for the foreman using the ruby API
 
-Also my first steps in ruby development .... 
+Also my first steps in ruby development ....
 
 And still a lot of work to do
 
@@ -37,3 +37,6 @@ Running inside an IRB session
 Need to add more proper debugging examples .....
 
 In the utils directory, there is a little script that generates a type definition template by querying the foreman server for the attributes available.
+
+This will generate the templates for all sub categories for the settings. Some settings are readonly.  I did not find a way to retrieve the fact that a setting is readonly using the apipie metadata, so I decided to list those attribute in a yaml file.
+

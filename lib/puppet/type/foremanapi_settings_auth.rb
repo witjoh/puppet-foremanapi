@@ -57,34 +57,30 @@ Puppet::Type.newtype(:foremanapi_settings_auth) do
   end
 
   newproperty(:oauth_active, :boolean => true) do
-    desc 'Foreman will use OAuth for API authorization'
-    newvalue(:true)
-    newvalue(:false)
-    munge do |value|
-      @resource.munge_boolean(value)
+    desc '[READ ONLY] Foreman will use OAuth for API authorization'
+    validate do |val|
+      fail 'oauth_active is read-only'
     end
   end
 
   newproperty(:oauth_consumer_key) do
-    desc 'OAuth consumer key'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] OAuth consumer key'
+    validate do |val|
+      fail 'oauth_consumer_key is read-only'
+    end
   end
 
   newproperty(:oauth_consumer_secret) do
-    desc 'OAuth consumer secret'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] OAuth consumer secret'
+    validate do |val|
+      fail 'oauth_consumer_secret is read-only'
+    end
   end
 
   newproperty(:oauth_map_users, :boolean => true) do
-    desc 'Foreman will map users by username in request-header. If this is set to false, OAuth requests will have admin rights.'
-    newvalue(:true)
-    newvalue(:false)
-    munge do |value|
-      @resource.munge_boolean(value)
+    desc '[READ ONLY] Foreman will map users by username in request-header. If this is set to false, OAuth requests will have admin rights.'
+    validate do |val|
+      fail 'oauth_map_users is read-only'
     end
   end
 
@@ -107,17 +103,17 @@ Puppet::Type.newtype(:foremanapi_settings_auth) do
   end
 
   newproperty(:ssl_ca_file) do
-    desc 'SSL CA file that Foreman will use to communicate with its proxies'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] SSL CA file that Foreman will use to communicate with its proxies'
+    validate do |val|
+      fail 'ssl_ca_file is read-only'
+    end
   end
 
   newproperty(:ssl_certificate) do
-    desc 'SSL Certificate path that Foreman would use to communicate with its proxies'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] SSL Certificate path that Foreman would use to communicate with its proxies'
+    validate do |val|
+      fail 'ssl_certificate is read-only'
+    end
   end
 
   newproperty(:ssl_client_cert_env) do
@@ -142,31 +138,35 @@ Puppet::Type.newtype(:foremanapi_settings_auth) do
   end
 
   newproperty(:ssl_priv_key) do
-    desc 'SSL Private Key file that Foreman will use to communicate with its proxies'
-   # munge do |value|
-   #   value.downcase
-   # end
+    desc '[READ ONLY] SSL Private Key file that Foreman will use to communicate with its proxies'
+    validate do |val|
+      fail 'ssl_priv_key is read-only'
+    end
   end
 
-  newproperty(:trusted_puppetmaster_hosts) do
+  newproperty(:trusted_puppetmaster_hosts, :array_matching => :all) do
     desc 'Hosts that will be trusted in addition to Smart Proxies for access to fact/report importers and ENC output'
   end
 
   newproperty(:websockets_encrypt, :boolean => true) do
-    desc 'VNC/SPICE websocket proxy console access encryption (websockets_ssl_key/cert setting required)'
-    newvalue(:true)
-    newvalue(:false)
-    munge do |value|
-      @resource.munge_boolean(value)
+    desc '[READ ONLY] VNC/SPICE websocket proxy console access encryption (websockets_ssl_key/cert setting required)'
+    validate do |val|
+      fail 'websockets_encrypt is read-only'
     end
   end
 
   newproperty(:websockets_ssl_cert) do
-    desc 'Certificate that Foreman will use to encrypt websockets'
+    desc '[READ ONLY] Certificate that Foreman will use to encrypt websockets'
+    validate do |val|
+      fail 'websockets_ssl_cert is read-only'
+    end
   end
 
   newproperty(:websockets_ssl_key) do
-    desc 'Private key file that Foreman will use to encrypt websockets'
+    desc '[READ ONLY] Private key file that Foreman will use to encrypt websockets'
+    validate do |val|
+      fail 'websockets_ssl_key is read-only'
+    end
   end
 
 end

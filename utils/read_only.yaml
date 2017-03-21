@@ -1,0 +1,26 @@
+---
+puppet:
+  - puppetrun
+auth:
+  - oauth_active
+  - oauth_consumer_key
+  - oauth_consumer_secret
+  - oauth_map_users
+  - ssl_ca_file
+  - ssl_certificate
+  - ssl_priv_key
+  - websockets_encrypt
+  - websockets_ssl_cert
+  - websockets_ssl_key
+email:
+  - delivery_method
+  - sendmail_arguments
+  - sendmail_location
+  - smpt_address
+  - smtp_authentication
+  - smtp_domain
+  - smtp_enable_starttls_auto
+  - smtp_openssl_verify_mode
+  - smtp_password
+  - smtp_port
+  - smtp_user_name

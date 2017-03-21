@@ -48,7 +48,7 @@ Puppet::Type.newtype(:foremanapi_settings_puppet) do
    # end
   end
 
-  newproperty(:Default_variables_Lookup_Path) do
+  newproperty(:Default_variables_Lookup_Path, :array_matching => :all) do
     desc 'Foreman will evaluate host smart variables in this order by default'
   end
 
@@ -89,7 +89,7 @@ Puppet::Type.newtype(:foremanapi_settings_puppet) do
   end
 
   newproperty(:legacy_puppet_hostname, :boolean => true) do
-    desc 'Foreman will truncate hostname to `puppet` if it starts with puppet'
+    desc 'Foreman will truncate hostname to \'puppet\' if it starts with puppet'
     newvalue(:true)
     newvalue(:false)
     munge do |value|
@@ -99,6 +99,7 @@ Puppet::Type.newtype(:foremanapi_settings_puppet) do
 
   newproperty(:modulepath) do
     desc 'Foreman will set this as the default Puppet module path if it cannot auto detect one'
+    newvalues(/^(\/[^\/ ]*)+\/?$/)
    # munge do |value|
    #   value.downcase
    # end
@@ -128,11 +129,9 @@ Puppet::Type.newtype(:foremanapi_settings_puppet) do
   end
 
   newproperty(:puppetrun, :boolean => true) do
-    desc 'Enable puppetrun support'
-    newvalue(:true)
-    newvalue(:false)
-    munge do |value|
-      @resource.munge_boolean(value)
+    desc '[READ ONLY] Enable puppetrun support'
+    validate do |val|
+      fail 'puppetrun is read-only'
     end
   end
 

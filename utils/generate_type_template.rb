@@ -1,8 +1,16 @@
 require 'apipie-bindings'
+require 'yaml'
 
 @url = 'http://localhost/'
 @username = 'admin'
 @password = 'vPuf2FMJhPSkijVL'
+@read_only_attr = {}
+
+begin
+  @read_only_attr = YAML.load_file('./read_only.yaml')
+rescue  
+  warn "Read only attributes yaml file (./read_only.yaml) could not be found.)"
+end
 
 
 @api = ApipieBindings::API.new({:uri => @url, :user => @username, :password => @password, :api_version => '2'})
@@ -40,7 +48,7 @@ end
 def group_by_category(the_hash)
   # filters all entries belonging to the 'category'
   result = []
-  result = the_hash.group_by { |h| h['category'] }
+  result = the_hash.group_by{ |h| h['category'] }
 end
 
 def generate_type_template(entry, file=nil)
@@ -49,26 +57,53 @@ def generate_type_template(entry, file=nil)
   # Generates a property entry to be addded to a puppet
   # custom type definition.
   #
-  if entry['settings_type'] == "boolean"
-    prop_attr=", :boolean => true"
-  end
-  file.puts "  newproperty(:#{entry['name']}#{prop_attr}) do"
-  file.puts "    desc '#{entry['description']}'"
   case entry['settings_type']
-  when "integer"
-    file.puts "    munge do |value|"
-    file.puts "      Integer(value)"
-    file.puts "    end"
-  when "string"
-    file.puts "   # munge do |value|"
-    file.puts "   #   value.downcase"
-    file.puts "   # end"
   when "boolean"
-    file.puts "    newvalue(:true)"
-    file.puts "    newvalue(:false)"
-    file.puts "    munge do |value|"
-    file.puts "      @resource.munge_boolean(value)"
+    prop_attr=", :boolean => true"
+  when "array"
+    prop_attr=", :array_matching => :all"
+  end
+ 
+  # check if this is a readonly property
+  category = entry["category"].split('::').last.downcase
+  if @read_only_attr.key? category
+    if @read_only_attr[category].include? entry["name"]
+      readonly ="[READ ONLY] "
+    end
+  end
+
+  file.puts "  newproperty(:#{entry['name']}#{prop_attr}) do"
+  file.puts "    desc '#{readonly}#{entry['description'].gsub("'","\\\\'")}'"
+  if readonly
+    file.puts "    validate do |val|"
+    file.puts "      fail '#{entry['name']} is read-only'"
     file.puts "    end"
+  else
+    case entry['settings_type']
+    when "integer"
+      file.puts "    munge do |value|"
+      file.puts "      Integer(value)"
+      file.puts "    end"
+    when "string"
+      # add extra validation rules
+      case entry['default']
+      when /^http/ # check for valid URL
+        file.puts "    newvalues(URI::regexp(%w(http https)))"
+      when /@/     # check for valid email
+        file.puts "    newvalues(URI::MailTo::MAILTO_REGEXP)"
+      when /^\//   # check for absolute path
+        file.puts "    newvalues(/^(\\\/[^\\\/ ]*)+\\\/?$/)"
+      end
+      file.puts "   # munge do |value|"
+      file.puts "   #   value.downcase"
+      file.puts "   # end"
+    when "boolean"
+      file.puts "    newvalue(:true)"
+      file.puts "    newvalue(:false)"
+      file.puts "    munge do |value|"
+      file.puts "      @resource.munge_boolean(value)"
+      file.puts "    end"
+    end
   end
   file.puts "  end"
   file.puts
@@ -79,12 +114,12 @@ def print_header(type, file=nil)
 
   file.puts "require 'uri'"
   file.puts "require 'puppet/parameter/boolean'"
-  file.puts "require_relative './common'"
+  file.puts "require_relative './foremanapi_common'"
   file.puts
   file.puts "Puppet::Type.newtype(:foremanapi_settings_#{type}) do"
   file.puts "  @doc = 'Manage a foreman server #{type} settings.'"
   file.puts
-  file.puts "  include Common"
+  file.puts "  include ForemanApi_Common"
   file.puts
   file.puts "  newparam(:tfm_server, namevar: true) do"
   file.puts "    desc 'The hostname of the foreman server to manage.'"
@@ -111,6 +146,5 @@ group_by_category(object_data).each do | key, value|
       generate_type_template(entry, f)
     end
     print_footer(f)
-  end  
+  end
 end
-

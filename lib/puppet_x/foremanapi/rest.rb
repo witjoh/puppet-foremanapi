@@ -1,6 +1,5 @@
 require 'apipie-bindings'
 require 'yaml'
-#require 'puppetx'
 
 module ForemanApi
   # wrapper class to handle all rest calls to Foreman api
